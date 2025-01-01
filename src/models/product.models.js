@@ -1,4 +1,3 @@
-/*
 "use strict";
 
 const { Schema, model } = require("mongoose");
@@ -10,6 +9,11 @@ const COLLECTION_NAME = "Products";
 const productSchema = new Schema(
     {
         product_name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        product_artist_name: {
             type: String,
             required: true,
             trim: true,
@@ -31,9 +35,12 @@ const productSchema = new Schema(
                 });
             },
         },
-        product_image: {
+        prpduct_thumbnail: {
             type: String,
             required: true,
+        },
+        product_images: {
+            type: [String],
         },
         product_quantity: {
             type: Number,
@@ -42,7 +49,7 @@ const productSchema = new Schema(
         product_type: {
             type: String,
             required: true,
-            enum: ["Electronics", "Clothing"],
+            enum: ["vinyl", "cd", "cassette", "merch", "gear"],
         },
         product_shop: {
             type: Schema.Types.ObjectId,
@@ -52,17 +59,6 @@ const productSchema = new Schema(
         product_attributes: {
             type: Schema.Types.Mixed,
             required: true,
-        },
-        product_ratingsAverage: {
-            type: Number,
-            default: 4.5,
-            min: [1, "Rate must be above 1.0"],
-            max: [5, "Rate must be below 5.0"],
-            set: (val) => Math.round(val * 10) / 10,
-        },
-        product_variations: {
-            type: Array,
-            default: [],
         },
         isDraft: {
             type: Boolean,
@@ -95,65 +91,6 @@ productSchema.pre("findOneAndUpdate", function (next) {
     next();
 });
 
-const clothingSchema = new Schema(
-    {
-        branch: {
-            type: String,
-            required: true,
-        },
-        size: {
-            type: String,
-            required: true,
-        },
-        color: {
-            type: String,
-            required: true,
-        },
-        material: {
-            type: String,
-            required: true,
-        },
-        product_shop: {
-            type: Schema.Types.ObjectId,
-            ref: "Shop",
-            required: true,
-        },
-    },
-    {
-        timestamps: true,
-        collection: "Clothing",
-    },
-);
-
-const electronicsSchema = new Schema(
-    {
-        manufacturer: {
-            type: String,
-            required: true,
-        },
-        color: {
-            type: String,
-            required: true,
-        },
-        warranty: {
-            type: String,
-            required: true,
-        },
-        product_shop: {
-            type: Schema.Types.ObjectId,
-            ref: "Shop",
-            required: true,
-        },
-    },
-    {
-        timestamps: true,
-        collection: "Electronics",
-    },
-);
-
 module.exports = {
     product: model(DOCUMENT_NAME, productSchema),
-    clothing: model("Clothing", clothingSchema),
-    electronics: model("Electronics", electronicsSchema),
 };
-*/
