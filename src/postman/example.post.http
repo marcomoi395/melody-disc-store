@@ -1,0 +1,62 @@
+@url_dev=http://localhost:3000/v1/api
+@API_KEY=c32cb1e215cf74d2f0ceba899a19f464d3a1b9a1e3b2ec2fb3154426b8652da3f92c41e83a247bd28bdb87db68169fe03cfd9933baf7a77e1fd914f48fc24887
+
+### Signup
+
+POST {{url_dev}}/shop/signup
+Content-Type: application/json
+x-api-key: {{API_KEY}}
+
+{
+  "name": "SHOP ECHO",
+  "email": "example03@gmail.com",
+  "password": "abc123"
+}
+
+### Login
+POST {{url_dev}}/shop/login
+Content-Type: application/json
+x-api-key: {{API_KEY}}
+
+{
+  "email": "example03@gmail.com",
+  "password": "abc123"
+}
+
+> {%
+    client.global.set("accessToken", response.body.metadata.tokens.accessToken);
+    client.global.set("refreshToken", response.body.metadata.tokens.refreshToken);
+%}
+
+
+### Logout
+< {%
+    request.variables.set("access_token", client.global.get("accessToken"))
+%}
+
+POST {{url_dev}}/shop/logout
+Content-Type: application/json
+x-api-key: {{API_KEY}}
+x-client-id: 67550c9df31e05bb72690e5f
+authorization: {{access_token}}
+
+
+### HandleRefreshToken
+< {%
+    request.variables.set("accessToken", client.global.get("accessToken"))
+    request.variables.set("refreshToken", client.global.get("refreshToken"))
+%}
+
+POST {{url_dev}}/shop/handleRefreshToken
+Content-Type: application/json
+x-api-key: {{API_KEY}}
+x-client-id: 67550c9df31e05bb72690e5f
+x-rtoken-key: {{refreshToken}}
+authorization: {{accessToken}}
+
+> {%
+    client.global.set("accessToken", response.body.metadata.tokens.accessToken);
+    client.global.set("refreshToken", response.body.metadata.tokens.refreshToken);
+%}
+
+
