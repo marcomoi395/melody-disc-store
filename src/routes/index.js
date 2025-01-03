@@ -9,8 +9,12 @@ router.use(apiKey);
 router.use(permission("0000"));
  */
 
+const VERSION_API = "/v1/api";
+
 router.get("", (req, res) => {
     res.send("Welcome to the Melody Disc");
 });
+
+router.use(`${VERSION_API}/product`, require("./product"));
 
 module.exports = router;

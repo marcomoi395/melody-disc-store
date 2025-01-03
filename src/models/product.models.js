@@ -12,15 +12,23 @@ const productSchema = new Schema(
             type: String,
             required: true,
             trim: true,
+            minlength: [3, "Product name must be at least 3 characters"],
         },
         product_artist_name: {
             type: String,
             required: true,
             trim: true,
+            minlength: [3, "Artist name must be at least 3 characters"],
         },
         product_price: {
             type: Number,
             required: true,
+            min: [0, "Price must be greater than or equal to 0"],
+        },
+        product_category: {
+            type: String,
+            required: true,
+            enum: ["vinyl", "cd", "cassette", "merch", "gear"],
         },
         product_description: {
             type: String,
@@ -46,18 +54,15 @@ const productSchema = new Schema(
             type: Number,
             required: true,
         },
-        product_type: {
-            type: String,
-            required: true,
-            enum: ["vinyl", "cd", "cassette", "merch", "gear"],
+        product_popularity: {
+            type: Number,
+            default: 1,
+            min: [1, "Popularity must be greater than or equal to 1"],
+            max: [5, "Popularity must be less than or equal to 5"],
         },
         product_shop: {
             type: Schema.Types.ObjectId,
             ref: "Shop",
-            required: true,
-        },
-        product_attributes: {
-            type: Schema.Types.Mixed,
             required: true,
         },
         isDraft: {
@@ -91,6 +96,4 @@ productSchema.pre("findOneAndUpdate", function (next) {
     next();
 });
 
-module.exports = {
-    product: model(DOCUMENT_NAME, productSchema),
-};
+module.exports = model(DOCUMENT_NAME, productSchema);
