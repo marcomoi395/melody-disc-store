@@ -1,7 +1,7 @@
 "use strict";
 
 const { convertToObjectId } = require("../utils");
-const { BadRequestError } = require("../core/error.response.js");
+const { BAD_REQUEST } = require("../core/error.response.js");
 const {
     getAllProducts,
     getProduct,
@@ -25,7 +25,7 @@ class ProductService {
         const query = { _id: product_id, isPublished: true };
         const foundProduct = await getProduct(query);
         if (!foundProduct) {
-            throw new BadRequestError("Product not found");
+            throw new BAD_REQUEST("Product not found");
         }
 
         return foundProduct;
@@ -34,7 +34,7 @@ class ProductService {
     // Admin
     async createProductByAdmin(body, shopId) {
         const { error } = productValidationSchema.validate(body);
-        if (error) throw new BadRequestError(error.message);
+        if (error) throw new BAD_REQUEST(error.message);
 
         const data = {
             ...body,
