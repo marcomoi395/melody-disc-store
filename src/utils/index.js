@@ -4,8 +4,8 @@ const _ = require("lodash");
 const mongoose = require("mongoose");
 const crypto = require("node:crypto");
 
-const getInfoData = ({ filed = [], object = {} }) => {
-    return _.pick(object, filed);
+const getInfoData = ({ fields = [], object = {} }) => {
+    return _.pick(object, fields);
 };
 
 const getPrivateAndPublicKey = () => {

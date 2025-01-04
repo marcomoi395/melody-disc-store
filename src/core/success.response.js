@@ -19,4 +19,17 @@ class SuccessResponse {
     }
 }
 
-module.exports = { SuccessResponse };
+class Created extends SuccessResponse {
+    constructor({
+        message,
+        statusCode = StatusCodes.CREATED,
+        reasonStatusCode = ReasonPhrases.CREATED,
+        metadata,
+        options = {},
+    }) {
+        super({ message, statusCode, reasonStatusCode, metadata });
+        this.options = options;
+    }
+}
+
+module.exports = { SuccessResponse, Created };

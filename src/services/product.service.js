@@ -45,4 +45,4 @@ class ProductService {
     }
 }
 
-module.exports = new ProductService();
+module.exports = ProductService;
