@@ -3,8 +3,8 @@
 const user = require("../models/user.model");
 
 class UserRepository {
-    static async findUserByEmail(email) {
-        return await user.findOne({ email }).lean();
+    static async findOneUser(query) {
+        return await user.findOne(query).lean();
     }
 
     static async createNewUser(body) {

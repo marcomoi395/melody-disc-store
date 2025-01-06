@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const userValidationSchema = Joi.object({
+const regiterUserValidationSchema = Joi.object({
     name: Joi.string().trim().max(32).required().messages({
         "string.empty": "Name is required",
         "string.max": "Name must not exceed 32 characters",
@@ -20,4 +20,17 @@ const userValidationSchema = Joi.object({
     roles: Joi.forbidden().strip(),
 });
 
-module.exports = userValidationSchema;
+const loginUserValidationSchema = Joi.object({
+    email: Joi.string().trim().email().required().messages({
+        "string.empty": "Email is required",
+        "string.email": "Email must be a valid email address",
+    }),
+    password: Joi.string().trim().required().messages({
+        "string.empty": "Password is required",
+    }),
+});
+
+module.exports = {
+    regiterUserValidationSchema,
+    loginUserValidationSchema,
+};
