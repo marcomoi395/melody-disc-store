@@ -20,7 +20,7 @@ class AccessController {
     registerForShop = async (req, res) => {
         new Created({
             message: "Sucuessfully registered for shop",
-            metadata: await registerForShop(req.body),
+            metadata: await registerForShop(req.body, req.user.userId),
         }).send(res);
     };
 
@@ -34,7 +34,7 @@ class AccessController {
     logout = async (req, res) => {
         new SuccessResponse({
             message: "Sucuessfully logout",
-            metadata: await logout(keyStore),
+            metadata: await logout(req.keyStore),
         }).send(res);
     };
 

@@ -1,7 +1,11 @@
 "use strict";
 
 const { findOneUser, createNewUser } = require("../repositories/user.repo.js");
-const { BAD_REQUEST, UNAUTHORIZED } = require("../core/error.response.js");
+const {
+    BAD_REQUEST,
+    UNAUTHORIZED,
+    FORBIDDEN,
+} = require("../core/error.response.js");
 const {
     regiterUserValidationSchema,
     loginUserValidationSchema,
@@ -9,6 +13,11 @@ const {
 const { getPrivateAndPublicKey, getInfoData } = require("../utils/index.js");
 const bcrypt = require("bcrypt");
 const { createTokenPair } = require("../auth/authUtils.js");
+const {
+    createKeyStore,
+    removeKeyStore,
+    updateKeyStore,
+} = require("./userKeyStore.service.js");
 
 class AccessService {
     /* {
@@ -116,6 +125,12 @@ class AccessService {
         );
 
         // Save to keyToken
+        await createKeyStore({
+            privateKey,
+            publicKey,
+            userId: foundUser._id,
+            refreshToken: tokens.refreshToken,
+        });
         //
 
         return {
@@ -129,15 +144,17 @@ class AccessService {
 
     static async logout(keyStore) {
         // Remove key by Id
+        return await removeKeyStore(keyStore.userId);
     }
 
     static async handlerRefreshToken({ refreshToken, user, keyStore }) {
         const { userId, email } = user;
 
+        console.log(keyStore.refreshTokensUsed);
+
         if (keyStore.refreshTokensUsed.includes(refreshToken)) {
             // reuse refresh token so clear keyStore
-            // clear keyStore
-
+            await removeKeyStore(userId);
             throw new FORBIDDEN("Something went wrong, please login again");
         }
 
@@ -157,6 +174,14 @@ class AccessService {
         );
 
         // Update keyStore
+        await updateKeyStore(userId, {
+            $set: {
+                refreshToken: tokens.refreshToken,
+            },
+            $addToSet: {
+                refreshTokensUsed: refreshToken,
+            },
+        });
 
         return {
             user,
