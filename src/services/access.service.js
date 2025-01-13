@@ -150,8 +150,6 @@ class AccessService {
     static async handlerRefreshToken({ refreshToken, user, keyStore }) {
         const { userId, email } = user;
 
-        console.log(keyStore.refreshTokensUsed);
-
         if (keyStore.refreshTokensUsed.includes(refreshToken)) {
             // reuse refresh token so clear keyStore
             await removeKeyStore(userId);
