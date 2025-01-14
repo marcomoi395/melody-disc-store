@@ -11,7 +11,7 @@ const productValidationSchema = require("../validations/product.validation.js");
 
 class ProductService {
     // -- User --
-    async getAllProducts({ limit, sort, page }) {
+    static async getAllProducts({ limit, sort, page }) {
         const query = { isPublished: true };
 
         return await getAllProducts(query, {
@@ -21,7 +21,7 @@ class ProductService {
         });
     }
 
-    async getProduct(product_id) {
+    static async getProduct(product_id) {
         const query = { _id: product_id, isPublished: true };
         const foundProduct = await getProduct(query);
         if (!foundProduct) {
@@ -32,13 +32,16 @@ class ProductService {
     }
 
     // Admin
-    async createProductByAdmin(body, shopId) {
-        const { error } = productValidationSchema.validate(body);
+    static async createProductByShop(body, shopId) {
+        const { error, value } = productValidationSchema.validate(body, {
+            stripUnknown: true,
+        });
+
         if (error) throw new BAD_REQUEST(error.message);
 
         const data = {
-            ...body,
-            products_shop: convertToObjectId(shopId),
+            ...value,
+            product_shop: convertToObjectId(shopId),
         };
 
         return await createProduct(data);

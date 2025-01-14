@@ -17,5 +17,6 @@ router.get("", (req, res) => {
 
 router.use(`${VERSION_API}/product`, require("./product"));
 router.use(`${VERSION_API}/auth`, require("./access"));
+router.use(`${VERSION_API}/discount`, require("./discount"));
 
 module.exports = router;

@@ -1,32 +1,62 @@
 const Joi = require("joi");
 
-// Validation cho product schema
 const productValidationSchema = Joi.object({
-    product_name: Joi.string().required().min(3).max(255).messages({
-        "string.base": '"product_name" phải là một chuỗi',
-        "string.empty": '"product_name" không được để trống',
-        "string.min": '"product_name" phải có ít nhất 3 ký tự',
-        "string.max": '"product_name" không được quá 255 ký tự',
-        "any.required": '"product_name" là trường bắt buộc',
+    product_name: Joi.string().trim().min(3).required().messages({
+        "string.base": "Product name must be a string",
+        "string.empty": "Product name is required",
+        "string.min": "Product name must be at least 3 characters",
     }),
 
-    product_thumbnail: Joi.string().uri().required().messages({
-        "string.base": '"product_thumbnail" phải là một chuỗi',
-        "string.empty": '"product_thumbnail" không được để trống',
-        "string.uri": '"product_thumbnail" phải là một URL hợp lệ',
-        "any.required": '"product_thumbnail" là trường bắt buộc',
+    product_artist_name: Joi.string().trim().min(3).required().messages({
+        "string.base": "Artist name must be a string",
+        "string.empty": "Artist name is required",
+        "string.min": "Artist name must be at least 3 characters",
     }),
 
-    product_images: Joi.array().items(Joi.string().uri()).optional().messages({
-        "array.base": '"product_images" phải là một mảng',
-        "string.uri": '"product_images" phải chứa các URL hợp lệ',
+    product_price: Joi.number().min(0).required().messages({
+        "number.base": "Price must be a number",
+        "number.min": "Price must be greater than or equal to 0",
+        "any.required": "Price is required",
     }),
+
+    product_category: Joi.string()
+        .valid("vinyl", "cd", "cassette", "merch", "gear")
+        .required()
+        .messages({
+            "any.only":
+                "Category must be one of vinyl, cd, cassette, merch, or gear",
+            "any.required": "Category is required",
+        }),
+
+    product_description: Joi.string().allow("").messages({
+        "string.base": "Description must be a string",
+    }),
+
+    product_thumbnail: Joi.string()
+
+        .uri()
+        .required()
+        .messages({
+            "string.base": "Thumbnail must be a string",
+            "string.uri": "Thumbnail must be a valid URL",
+            "string.empty": "Thumbnail is required",
+        }),
+
+    product_images: Joi.array()
+        .items(
+            Joi.string().uri().messages({
+                "string.uri": "Each product image must be a valid URL",
+            }),
+        )
+        .messages({
+            "array.base": "Product images must be an array of URLs",
+        }),
 
     product_quantity: Joi.number().integer().min(0).required().messages({
-        "number.base": '"product_quantity" phải là một số',
-        "number.integer": '"product_quantity" phải là số nguyên',
-        "number.min": '"product_quantity" không thể nhỏ hơn 0',
-        "any.required": '"product_quantity" là trường bắt buộc',
+        "number.base": "Quantity must be a number",
+        "number.integer": "Quantity must be an integer",
+        "number.min": "Quantity must be at least 0",
+        "any.required": "Quantity is required",
     }),
 
     product_popularity: Joi.number()
@@ -35,18 +65,17 @@ const productValidationSchema = Joi.object({
         .max(5)
         .default(1)
         .messages({
-            "number.base": '"product_popularity" phải là một số',
-            "number.integer": '"product_popularity" phải là số nguyên',
-            "number.min": '"product_popularity" phải lớn hơn hoặc bằng 1',
-            "number.max": '"product_popularity" phải nhỏ hơn hoặc bằng 5',
+            "number.base": "Popularity must be a number",
+            "number.min": "Popularity must be at least 1",
+            "number.max": "Popularity must be at most 5",
         }),
 
     isDraft: Joi.boolean().default(true).messages({
-        "boolean.base": '"isDraft" phải là một giá trị boolean',
+        "boolean.base": "isDraft must be a boolean",
     }),
 
     isPublished: Joi.boolean().default(false).messages({
-        "boolean.base": '"isPublished" phải là một giá trị boolean',
+        "boolean.base": "isPublished must be a boolean",
     }),
 });
 

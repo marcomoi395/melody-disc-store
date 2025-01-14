@@ -119,7 +119,7 @@ class AccessService {
 
         // Create token pair
         const tokens = createTokenPair(
-            { userId: foundUser._id, email },
+            { userId: foundUser._id, email, roles: foundUser.roles },
             publicKey,
             privateKey,
         );

@@ -3,8 +3,8 @@
 const { Schema, model } = require("mongoose");
 const slugify = require("slugify");
 
-const DOCUMENT_NAME = "Product";
-const COLLECTION_NAME = "Products";
+const DOCUMENT_NAME = "product";
+const COLLECTION_NAME = "products";
 
 const productSchema = new Schema(
     {
@@ -32,7 +32,6 @@ const productSchema = new Schema(
         },
         product_description: {
             type: String,
-            required: true,
         },
         product_slug: {
             type: String,
@@ -43,7 +42,7 @@ const productSchema = new Schema(
                 });
             },
         },
-        prpduct_thumbnail: {
+        product_thumbnail: {
             type: String,
             required: true,
         },
