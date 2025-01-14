@@ -15,15 +15,6 @@ const createDiscountValidation = require("../validations/discount.validation.js"
 
 class DiscountService {
     static async createDiscount(body, userId) {
-        // check permissions
-        const foundUser = await findOneUser({ _id: userId });
-        if (
-            !foundUser.permissions.includes("shop") ||
-            !foundUser.permissions.includes("admin")
-        ) {
-            throw new UNAUTHORIZED("Permissions dined");
-        }
-
         // Validating
         const { error, value } = createDiscountValidation.validate(body, {
             stripUnknown: true,
