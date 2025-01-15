@@ -85,15 +85,6 @@ class ProductService {
     }
 
     static async publishProudctsForShop(product_ids, userId) {
-        const find = await getProducts({
-            _id: { $in: product_ids },
-            product_shop: convertToObjectId(userId),
-        });
-
-        if (find.length !== product_ids.length || !find) {
-            throw new BAD_REQUEST("Some products not found");
-        }
-
         const result = await updateProducts(
             {
                 _id: { $in: product_ids },
@@ -128,15 +119,6 @@ class ProductService {
     }
 
     static async draftProductsForShop(product_ids, userId) {
-        const find = await getProducts({
-            _id: { $in: product_ids },
-            product_shop: convertToObjectId(userId),
-        });
-
-        if (find.length !== product_ids.length || !find) {
-            throw new BAD_REQUEST("Some products not found");
-        }
-
         const result = await updateProducts(
             {
                 _id: { $in: product_ids },
