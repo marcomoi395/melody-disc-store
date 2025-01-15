@@ -93,4 +93,67 @@ const changeStatusProductsSchema = Joi.object({
     }),
 });
 
-module.exports = { productValidationSchema, changeStatusProductsSchema };
+const updateProductSchema = Joi.object({
+    product_name: Joi.string().trim().min(3).messages({
+        "string.base": "Product name must be a string",
+        "string.empty": "Product name is required",
+        "string.min": "Product name must be at least 3 characters",
+    }),
+
+    product_artist_name: Joi.string().trim().min(3).messages({
+        "string.base": "Artist name must be a string",
+        "string.empty": "Artist name is required",
+        "string.min": "Artist name must be at least 3 characters",
+    }),
+
+    product_price: Joi.number().min(0).messages({
+        "number.base": "Price must be a number",
+        "number.min": "Price must be greater than or equal to 0",
+    }),
+
+    product_category: Joi.string()
+        .valid("vinyl", "cd", "cassette", "merch", "gear")
+        .messages({
+            "any.only":
+                "Category must be one of vinyl, cd, cassette, merch, or gear",
+            "any.required": "Category is required",
+        }),
+
+    product_description: Joi.string().allow("").messages({
+        "string.base": "Description must be a string",
+    }),
+
+    product_thumbnail: Joi.string().uri().messages({
+        "string.base": "Thumbnail must be a string",
+        "string.uri": "Thumbnail must be a valid URL",
+        "string.empty": "Thumbnail is required",
+    }),
+
+    product_images: Joi.array()
+        .items(
+            Joi.string().uri().messages({
+                "string.uri": "Each product image must be a valid URL",
+            }),
+        )
+        .messages({
+            "array.base": "Product images must be an array of URLs",
+        }),
+
+    product_quantity: Joi.number().integer().min(0).messages({
+        "number.base": "Quantity must be a number",
+        "number.integer": "Quantity must be an integer",
+        "number.min": "Quantity must be at least 0",
+    }),
+
+    product_popularity: Joi.number().integer().min(1).max(5).messages({
+        "number.base": "Popularity must be a number",
+        "number.min": "Popularity must be at least 1",
+        "number.max": "Popularity must be at most 5",
+    }),
+});
+
+module.exports = {
+    productValidationSchema,
+    changeStatusProductsSchema,
+    updateProductSchema,
+};

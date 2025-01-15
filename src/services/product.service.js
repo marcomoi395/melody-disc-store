@@ -1,6 +1,6 @@
 "use strict";
 
-const { convertToObjectId } = require("../utils");
+const { convertToObjectId, updateNestedObjectParser } = require("../utils");
 const { BAD_REQUEST } = require("../core/error.response.js");
 const {
     getAllProducts,
@@ -10,10 +10,12 @@ const {
     updateProducts,
     getProducts,
     searchProducts,
+    findOneAndUpdate,
 } = require("../repositories/product.repo");
 const {
     productValidationSchema,
     changeStatusProductsSchema,
+    updateProductSchema,
 } = require("../validations/product.validation.js");
 const { strictTransportSecurity } = require("helmet");
 
@@ -122,6 +124,24 @@ class ProductService {
         }
 
         return result;
+    }
+
+    static async updateProductForShop(product_id, body, userId) {
+        const { error, value } = updateProductSchema.validate(body, {
+            stripUnknown: true,
+        });
+
+        console.log("value::", value);
+
+        if (error) throw new BAD_REQUEST(error.message);
+
+        return await findOneAndUpdate(
+            {
+                _id: product_id,
+                product_shop: convertToObjectId(userId),
+            },
+            { $set: updateNestedObjectParser(value) },
+        );
     }
 }
 

@@ -25,6 +25,10 @@ router.use(checkRoles(["shop", "admin"]));
 
 router.post("/", asyncHandler(productController.createProduct));
 router.patch(
+    "/:product_id",
+    asyncHandler(productController.updateProductForShop),
+);
+router.patch(
     "/publish-product/:product_id",
     asyncHandler(productController.publishProductForShop),
 );

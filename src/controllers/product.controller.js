@@ -10,6 +10,7 @@ const {
     publishProuductForShop,
     draftProductForShop,
     changeStatusProducts,
+    updateProductForShop,
 } = require("../services/product.service");
 
 class ProductController {
@@ -72,6 +73,17 @@ class ProductController {
         new SuccessResponse({
             message: "Create product successfully",
             metadata: await createProductByShop(req.body, req.user.userId),
+        }).send(res);
+    };
+
+    updateProductForShop = async (req, res) => {
+        new SuccessResponse({
+            message: "Update product successfully",
+            metadata: await updateProductForShop(
+                req.params.product_id,
+                req.body,
+                req.user.userId,
+            ),
         }).send(res);
     };
 }

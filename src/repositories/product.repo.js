@@ -57,6 +57,10 @@ class ProductRepository {
 
         return result;
     }
+
+    static async findOneAndUpdate(query, updateSet) {
+        return product.findOneAndUpdate(query, updateSet, { new: true });
+    }
 }
 
 module.exports = ProductRepository;
