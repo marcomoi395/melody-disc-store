@@ -64,12 +64,6 @@ const productSchema = new Schema(
             ref: "Shop",
             required: true,
         },
-        isDraft: {
-            type: Boolean,
-            default: true,
-            index: true,
-            select: false,
-        },
         isPublished: {
             type: Boolean,
             default: false,

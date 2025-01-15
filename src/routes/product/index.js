@@ -8,7 +8,12 @@ const { apiKey, permission } = require("../../auth/checkAuth");
 const { authentication, checkRoles } = require("../../auth/authUtils");
 
 router.get("/", asyncHandler(productController.getAllProducts));
+router.get("/result", asyncHandler(productController.searchProductsByUser));
 router.get("/:product_id", asyncHandler(productController.getProduct));
+router.get(
+    "/category/:category",
+    asyncHandler(productController.getProductsByCategory),
+);
 
 // Check Permission [{view: "0000", edit: "1111",}]
 // router.use(asyncHandler(apiKey));
@@ -16,9 +21,24 @@ router.get("/:product_id", asyncHandler(productController.getProduct));
 
 // Authenticated
 router.use(asyncHandler(authentication));
-
-router.use(checkRoles(["shop"]));
+router.use(checkRoles(["shop", "admin"]));
 
 router.post("/", asyncHandler(productController.createProduct));
+router.patch(
+    "/publish-product/:product_id",
+    asyncHandler(productController.publishProductForShop),
+);
+router.patch(
+    "/publish-products",
+    asyncHandler(productController.publishProductsForShop),
+);
+router.patch(
+    "/draft-product/:product_id",
+    asyncHandler(productController.draftProductForShop),
+);
+router.patch(
+    "/draft-products",
+    asyncHandler(productController.draftProductsForShop),
+);
 
 module.exports = router;

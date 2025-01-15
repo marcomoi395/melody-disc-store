@@ -60,13 +60,15 @@ const authentication = async (req, res, next) => {
 };
 
 const checkRoles = (roles) => (req, res, next) => {
-    roles.forEach((role) => {
-        if (!req.user.roles.includes(role))
-            throw new UNAUTHORIZED("Permission denied");
-    });
+    const hasRole = roles.some((role) => req.user.roles.includes(role));
 
-    return next();
+    if (hasRole) {
+        return next();
+    }
+
+    next(new UNAUTHORIZED("Permission dined"));
 };
+
 module.exports = {
     createTokenPair,
     authentication,

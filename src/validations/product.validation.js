@@ -70,13 +70,9 @@ const productValidationSchema = Joi.object({
             "number.max": "Popularity must be at most 5",
         }),
 
-    isDraft: Joi.boolean().default(true).messages({
-        "boolean.base": "isDraft must be a boolean",
-    }),
-
     isPublished: Joi.boolean().default(false).messages({
         "boolean.base": "isPublished must be a boolean",
     }),
 });
 
-module.exports = productValidationSchema;
+module.exports = { productValidationSchema };

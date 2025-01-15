@@ -1,4 +1,5 @@
 const product = require("../models/product.models.js");
+const { BAD_REQUEST } = require("../core/error.response.js");
 
 class ProductRepository {
     static async getAllProducts(
@@ -29,6 +30,32 @@ class ProductRepository {
 
     static async createProduct(data) {
         return await product.create(data);
+    }
+
+    static async updateProduct(query, updateSet) {
+        return await product.updateOne(query, updateSet);
+    }
+
+    static async updateProducts(query, updateSet) {
+        return await product.updateMany(query, updateSet);
+    }
+
+    static async searchProducts(keyword) {
+        const regexSearch = new RegExp(keyword);
+        const result = await product
+            .find(
+                {
+                    isPublished: true,
+                    $text: { $search: regexSearch },
+                },
+                {
+                    score: { $meta: "textScore" },
+                },
+            )
+            .sort({ score: { $meta: "textScore" } })
+            .lean();
+
+        return result;
     }
 }
 
