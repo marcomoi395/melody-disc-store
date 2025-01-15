@@ -8,9 +8,8 @@ const {
     getAllProductsByCategory,
     searchProductsByUser,
     publishProuductForShop,
-    publishProudctsForShop,
     draftProductForShop,
-    draftProductsForShop,
+    changeStatusProducts,
 } = require("../services/product.service");
 
 class ProductController {
@@ -52,16 +51,6 @@ class ProductController {
         }).send(res);
     };
 
-    publishProductsForShop = async (req, res) => {
-        new SuccessResponse({
-            message: "Get products successfully",
-            metadata: await publishProudctsForShop(
-                req.body.product_ids,
-                req.user.userId,
-            ),
-        }).send(res);
-    };
-
     draftProductForShop = async (req, res) => {
         new SuccessResponse({
             message: "Draft product successfully",
@@ -72,13 +61,10 @@ class ProductController {
         }).send(res);
     };
 
-    draftProductsForShop = async (req, res) => {
+    changeStatusProducts = async (req, res) => {
         new SuccessResponse({
-            message: " Draft products successfully",
-            metadata: await draftProductsForShop(
-                req.body.product_ids,
-                req.user.userId,
-            ),
+            message: "Get products successfully",
+            metadata: await changeStatusProducts(req.body, req.user.userId),
         }).send(res);
     };
 

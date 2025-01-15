@@ -75,4 +75,22 @@ const productValidationSchema = Joi.object({
     }),
 });
 
-module.exports = { productValidationSchema };
+const changeStatusProductsSchema = Joi.object({
+    product_ids: Joi.array()
+        .items(Joi.string().length(24).hex().required())
+        .min(1)
+        .required()
+        .messages({
+            "array.base": '"product_ids" must be an array',
+            "array.min": '"product_ids" must contain at least one ID',
+            "string.length": 'Each "product_ids" must be exactly 24 characters',
+            "string.hex": 'Each "product_ids" must be a valid hex string',
+        }),
+
+    type: Joi.string().valid("published", "draft").required().messages({
+        "any.only": '"type" must be either "published" or "draft"',
+        "string.base": '"type" must be a string',
+    }),
+});
+
+module.exports = { productValidationSchema, changeStatusProductsSchema };

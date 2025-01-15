@@ -28,17 +28,15 @@ router.patch(
     "/publish-product/:product_id",
     asyncHandler(productController.publishProductForShop),
 );
-router.patch(
-    "/publish-products",
-    asyncHandler(productController.publishProductsForShop),
-);
+
 router.patch(
     "/draft-product/:product_id",
     asyncHandler(productController.draftProductForShop),
 );
+
 router.patch(
-    "/draft-products",
-    asyncHandler(productController.draftProductsForShop),
+    "/change-status",
+    asyncHandler(productController.changeStatusProducts),
 );
 
 module.exports = router;

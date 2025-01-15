@@ -13,6 +13,7 @@ const {
 } = require("../repositories/product.repo");
 const {
     productValidationSchema,
+    changeStatusProductsSchema,
 } = require("../validations/product.validation.js");
 const { strictTransportSecurity } = require("helmet");
 
@@ -84,23 +85,6 @@ class ProductService {
         return result;
     }
 
-    static async publishProudctsForShop(product_ids, userId) {
-        const result = await updateProducts(
-            {
-                _id: { $in: product_ids },
-                isPublished: false,
-                product_shop: convertToObjectId(userId),
-            },
-            { $set: { isPublished: true } },
-        );
-
-        if (result.modifiedCount === 0) {
-            throw new BAD_REQUEST("Products not found or already published");
-        }
-
-        return result;
-    }
-
     static async draftProductForShop(product_id, userId) {
         const result = await updateProduct(
             {
@@ -118,19 +102,23 @@ class ProductService {
         return result;
     }
 
-    static async draftProductsForShop(product_ids, userId) {
+    static async changeStatusProducts(body, userId) {
+        const { error } = changeStatusProductsSchema.validate(body);
+
+        if (error) throw new BAD_REQUEST(error.message);
+
+        const isPublished = body.type === "publish" ? true : false;
+
         const result = await updateProducts(
             {
-                _id: { $in: product_ids },
-                isPublished: true,
+                _id: { $in: body.product_ids },
                 product_shop: convertToObjectId(userId),
             },
-
-            { $set: { isPublished: false } },
+            { $set: { isPublished: isPublished } },
         );
 
         if (result.modifiedCount === 0) {
-            throw new BAD_REQUEST("Products not found or already drafted");
+            throw new BAD_REQUEST("Products not found");
         }
 
         return result;
