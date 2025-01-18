@@ -44,7 +44,7 @@ const discountSchema = new Schema(
         discount_used_count: {
             type: Number,
         },
-        discount_users_used: {
+        discount_user_used: {
             type: Array,
             default: [],
         },
@@ -59,7 +59,6 @@ const discountSchema = new Schema(
         discount_user_id: {
             type: Schema.Types.ObjectId,
             ref: "user",
-            required: true,
         },
         discount_is_active: {
             type: Boolean,

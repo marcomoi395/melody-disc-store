@@ -1,13 +1,65 @@
 "use strict";
 
 const { SuccessResponse, Created } = require("../core/success.response");
-const { createDiscount } = require("../services/discount.service");
+const {
+    createDiscount,
+    updateDiscount,
+    getAllProductsByDiscountCodeForShop,
+    getAllDiscountsForShop,
+    getDiscountAmount,
+    deleteDiscountForShop,
+    changeStatusDiscount,
+} = require("../services/discount.service");
 
 class DiscountController {
     createDiscount = async (req, res) => {
         new Created({
-            message: "Sucuessfully registered for client",
-            metadata: await createDiscount(req.body, req.user.userId),
+            message: "Create discount successfully",
+            metadata: await createDiscount(req.body),
+        }).send(res);
+    };
+
+    updateDiscount = async (req, res) => {
+        new SuccessResponse({
+            message: "Update discount successfully",
+            metadata: await updateDiscount(req.body, req.params.discountId),
+        }).send(res);
+    };
+
+    getAllProductsByDiscountCodeForShop = async (req, res) => {
+        new SuccessResponse({
+            message: "Get all products by discount code for shop",
+            metadata: await getAllProductsByDiscountCodeForShop(
+                req.params.discountCode,
+            ),
+        }).send(res);
+    };
+
+    getAllDiscountForShop = async (req, res) => {
+        new SuccessResponse({
+            message: "Get all discount for shop",
+            metadata: await getAllDiscountsForShop(),
+        }).send(res);
+    };
+
+    getDiscountAmount = async (req, res) => {
+        new SuccessResponse({
+            message: "Get discount amount",
+            metadata: await getDiscountAmount(req.user.userId, req.body),
+        }).send(res);
+    };
+
+    deleteDiscountForShop = async (req, res) => {
+        new SuccessResponse({
+            message: "Delete discount for shop",
+            metadata: await deleteDiscountForShop(req.params.discountId),
+        }).send(res);
+    };
+
+    changeStatusDiscount = async (req, res) => {
+        new SuccessResponse({
+            message: "Change status discount",
+            metadata: await changeStatusDiscount(req.body),
         }).send(res);
     };
 }

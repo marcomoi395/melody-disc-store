@@ -131,8 +131,6 @@ class ProductService {
             stripUnknown: true,
         });
 
-        console.log("value::", value);
-
         if (error) throw new BAD_REQUEST(error.message);
 
         return await findOneAndUpdate(
