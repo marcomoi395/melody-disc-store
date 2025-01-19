@@ -8,8 +8,11 @@ const { apiKey, permission } = require("../../auth/checkAuth");
 const { authentication, checkRoles } = require("../../auth/authUtils");
 
 router.get("/", asyncHandler(productController.getAllProducts));
+
 router.get("/result", asyncHandler(productController.searchProductsByUser));
+
 router.get("/:product_id", asyncHandler(productController.getProduct));
+
 router.get(
     "/category/:category",
     asyncHandler(productController.getProductsByCategory),
@@ -21,9 +24,11 @@ router.get(
 
 // Authenticated
 router.use(asyncHandler(authentication));
+
 router.use(checkRoles(["shop", "admin"]));
 
 router.post("/", asyncHandler(productController.createProduct));
+
 router.patch(
     "/:product_id",
     asyncHandler(productController.updateProductForShop),

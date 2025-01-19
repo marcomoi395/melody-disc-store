@@ -16,13 +16,16 @@ router.post("/login", asyncHandler(accessController.login));
 
 // Authenticated
 router.use(asyncHandler(authentication));
+router.use(checkRoles(["admin", "shop"]));
 
 // Private route
-router.post("/register/shop", asyncHandler(accessController.registerForShop));
 router.post("/logout", asyncHandler(accessController.logout));
 router.post(
     "/refresh-token",
     asyncHandler(accessController.handlerRefreshToken),
 );
+
+router.use(checkRoles(["admin"]));
+router.post("/register/shop", asyncHandler(accessController.registerForShop));
 
 module.exports = router;
