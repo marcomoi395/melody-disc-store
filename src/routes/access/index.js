@@ -5,7 +5,7 @@ const router = express.Router();
 const asyncHandler = require("../../helper/asyncHandler");
 const accessController = require("../../controllers/access.controller");
 const { apiKey, permission } = require("../../auth/checkAuth");
-const { authentication } = require("../../auth/authUtils");
+const { authentication, checkRoles } = require("../../auth/authUtils");
 
 router.post(
     "/register/client",

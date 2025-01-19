@@ -18,6 +18,7 @@ const {
     updateProductSchema,
 } = require("../validations/product.validation.js");
 const { strictTransportSecurity } = require("helmet");
+const { createInveotry } = require("../repositories/inventory.repo.js");
 
 class ProductService {
     // -- User --
@@ -67,7 +68,15 @@ class ProductService {
             product_shop: convertToObjectId(shopId),
         };
 
-        return await createProduct(data);
+        const newProduct = await createProduct(data);
+
+        // Add product to inventory
+        if (newProduct) {
+            await createInveotry({
+                inventory_product_id: newProduct._id,
+                inventory_stock: newProduct.product_quantity,
+            });
+        }
     }
 
     static async publishProuductForShop(product_id, userId) {
