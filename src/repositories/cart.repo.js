@@ -11,10 +11,17 @@ class CartRepository {
         return await cart.create(body);
     }
 
-    static async updateCartAndReturn (query, updateSet, options = {new: true}) {
-        return await cart.findOneAndUpdate(query, updateSet, options)
+    static async updateCart(query, updateSet, options = { new: true }) {
+        return await cart.updateOne(query, updateSet, options);
     }
 
+    static async updateCartAndReturn(
+        query,
+        updateSet,
+        options = { new: true },
+    ) {
+        return await cart.findOneAndUpdate(query, updateSet, options);
+    }
 }
 
 module.exports = CartRepository;

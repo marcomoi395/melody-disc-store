@@ -51,10 +51,12 @@ const authentication = async (req, res, next) => {
         const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
         if (userId !== decodeUser.userId)
             throw new UNAUTHORIZED("Invalid Request");
+
         req.keyStore = keyStore;
         req.user = decodeUser;
         return next();
     } catch (e) {
+        console.log("error::", e);
         throw new UNAUTHORIZED("Invalid Request");
     }
 };

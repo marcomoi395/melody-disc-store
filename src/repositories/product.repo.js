@@ -24,8 +24,8 @@ class ProductRepository {
         return await product.findOne(query).lean();
     }
 
-    static async getProducts(query) {
-        return await product.find(query).lean();
+    static async getProducts(query, select = {}) {
+        return await product.find(query).select(select).lean();
     }
 
     static async createProduct(data) {

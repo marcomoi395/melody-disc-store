@@ -19,5 +19,6 @@ router.use(`${VERSION_API}/product`, require("./product"));
 router.use(`${VERSION_API}/auth`, require("./access"));
 router.use(`${VERSION_API}/discount`, require("./discount"));
 router.use(`${VERSION_API}/inventory`, require("./inventory"));
+router.use(`${VERSION_API}/cart`, require("./cart"));
 
 module.exports = router;
