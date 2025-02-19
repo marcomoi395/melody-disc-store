@@ -68,15 +68,7 @@ class ProductService {
             product_shop: convertToObjectId(shopId),
         };
 
-        const newProduct = await createProduct(data);
-
-        // Add product to inventory
-        if (newProduct) {
-            await createInveotry({
-                inventory_product_id: newProduct._id,
-                inventory_stock: newProduct.product_quantity,
-            });
-        }
+        return await createProduct(data);
     }
 
     static async publishProuductForShop(product_id, userId) {

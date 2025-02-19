@@ -52,13 +52,6 @@ const productValidationSchema = Joi.object({
             "array.base": "Product images must be an array of URLs",
         }),
 
-    product_quantity: Joi.number().integer().min(0).required().messages({
-        "number.base": "Quantity must be a number",
-        "number.integer": "Quantity must be an integer",
-        "number.min": "Quantity must be at least 0",
-        "any.required": "Quantity is required",
-    }),
-
     product_popularity: Joi.number()
         .integer()
         .min(1)
@@ -138,12 +131,6 @@ const updateProductSchema = Joi.object({
         .messages({
             "array.base": "Product images must be an array of URLs",
         }),
-
-    product_quantity: Joi.number().integer().min(0).messages({
-        "number.base": "Quantity must be a number",
-        "number.integer": "Quantity must be an integer",
-        "number.min": "Quantity must be at least 0",
-    }),
 
     product_popularity: Joi.number().integer().min(1).max(5).messages({
         "number.base": "Popularity must be a number",
