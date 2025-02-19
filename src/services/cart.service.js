@@ -19,6 +19,15 @@ const {
 } = require("../validations/product.validation.js");
 
 class CartService {
+    /**
+     * Add a product to the user's cart.
+     * @async
+     * @param {string} userId
+     * @param {Object} products - The product detail to addProductToCart
+     * @returns {Promise<Object>} The success message
+     * @throws {BAD_REQUEST} If product don't exists in database or user's cart locked
+     */
+
     static async addProductToCart(userId, products = {}) {
         // Validate product
         const { error, value } = addProductToCartSchema.validate(products, {
@@ -83,6 +92,15 @@ class CartService {
         }
     }
 
+    /**
+     * Increase or decrease the quantity of a product in the user's cart
+     * @async
+     * @param {string} userId
+     * @param {Object} body - The product detail to changeQuantityProductInCart
+     * @returns {Promise<Object>} Returns new user's cart
+     * @throws {BAD_REQUEST} If product don't exists in database or user's cart locked
+     */
+
     static async changeQuantityProductInCart(userId, body = {}) {
         const { error, value } = changeQuantityProductInCartSchema.validate(
             body,
@@ -143,12 +161,21 @@ class CartService {
         );
     }
 
-    static async deleteProductFromCart(userId, { product_id }) {
+    /**
+     * Delete products in user's cart
+     * @async
+     * @param {string} userId - The ID off the user
+     * @param {array} productIdArray - The product detail to deleteProductFromCart
+     * @return {Promise<Object>} Return new user's cart
+     * @throws {BAD_REQUEST} If product don't find in user's cart
+     */
+
+    static async deleteProductFromCart(userId, productIdArray) {
         // Check product exist in cart
         const foundProductInCart = await getCart({
             cart_user_id: convertToObjectId(userId),
             cart_state: "active",
-            "cart_products.product_id": product_id,
+            "cart_products.product_id": productIdArray,
         });
 
         if (!foundProductInCart) throw new BAD_REQUEST("Invalid request");
@@ -160,11 +187,19 @@ class CartService {
             },
             {
                 $pull: {
-                    cart_products: { product_id },
+                    cart_products: { product_id: productIdArray },
                 },
             },
         );
     }
+
+    /**
+     * Retrieves the user's cart.
+     * @async
+     * @param {string} userId - The ID of the user.
+     * @returns {Promise<Object>} The user's cart.
+     * @throws {BAD_REQUEST} If the cart is locked.
+     */
 
     static async getCart(userId) {
         const foundCart = await getCart({
@@ -213,6 +248,11 @@ class CartService {
             );
 
             item.name = foundProduct.product_name;
+            if (c.price !== foundProducts.product_price) {
+                item.originalPrice = c.price;
+                item.isChangedPrice = true;
+            }
+            item.currentPrice = foundProducts.product_price;
             item.originalPrice = cart.price;
             item.currentPrice = foundProduct.product_price;
             item.thumbnail = foundProduct.product_thumbnail;
