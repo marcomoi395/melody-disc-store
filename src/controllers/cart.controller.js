@@ -29,7 +29,10 @@ class CartController {
     deleteProductFromCart = async (req, res) => {
         new SuccessResponse({
             message: "Delete product from cart successfully",
-            metadata: await deleteProductFromCart(req.user.userId, req.body),
+            metadata: await deleteProductFromCart(
+                req.user.userId,
+                req.body.product_id,
+            ),
         }).send(res);
     };
 

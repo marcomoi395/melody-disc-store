@@ -3,6 +3,7 @@
 const { getProducts } = require("../repositories/product.repo");
 
 module.exports = async (payload) => {
+    console.log(payload);
     const idArray = payload.map((item) => item.product_id);
 
     const foundProducts = await getProducts({

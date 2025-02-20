@@ -35,7 +35,7 @@ class CartService {
         });
         if (error) throw new BAD_REQUEST(error.message);
 
-        if (!(await checkExistingProduct(value)))
+        if (!(await checkExistingProduct([value])))
             throw new BAD_REQUEST("Invalid product");
 
         // Check cart exists
@@ -155,7 +155,7 @@ class CartService {
             },
             {
                 $inc: {
-                    "cart.products.$.quantity": quantity - old_quantity,
+                    "cart_products.$.quantity": quantity - old_quantity,
                 },
             },
         );
@@ -175,7 +175,7 @@ class CartService {
         const foundProductInCart = await getCart({
             cart_user_id: convertToObjectId(userId),
             cart_state: "active",
-            "cart_products.product_id": productIdArray,
+            "cart_products.product_id": { $in: productIdArray },
         });
 
         if (!foundProductInCart) throw new BAD_REQUEST("Invalid request");
@@ -187,7 +187,7 @@ class CartService {
             },
             {
                 $pull: {
-                    cart_products: { product_id: productIdArray },
+                    cart_products: { product_id: { $in: productIdArray } },
                 },
             },
         );
