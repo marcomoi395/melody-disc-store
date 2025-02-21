@@ -17,10 +17,6 @@ const createDiscountValidation = Joi.object({
     discount_users_used: Joi.array().items(Joi.string()).default([]),
     discount_max_uses_per_user: Joi.number().integer().min(1).required(),
     discount_min_order_amount: Joi.number().min(0).required(),
-    discount_apply_to: Joi.string()
-        .valid("all_products", "specific_products")
-        .required(),
-    discount_product_ids: Joi.array().items(Joi.string()).default([]),
 });
 
 const updateDiscountValidation = Joi.object({
@@ -36,8 +32,6 @@ const updateDiscountValidation = Joi.object({
     discount_users_used: Joi.array().items(Joi.string()),
     discount_max_uses_per_user: Joi.number().integer().min(1),
     discount_min_order_amount: Joi.number().min(0),
-    discount_apply_to: Joi.string().valid("all_products", "specific_products"),
-    discount_product_ids: Joi.array().items(Joi.string()),
 });
 
 module.exports = { createDiscountValidation, updateDiscountValidation };

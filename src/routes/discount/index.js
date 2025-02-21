@@ -9,10 +9,7 @@ const { authentication, checkRoles } = require("../../auth/authUtils");
 
 // Authenticated
 router.use(asyncHandler(authentication));
-
-router.get("/", asyncHandler(discountController.getDiscountAmount));
-
-router.use(checkRoles(["shop"]));
+router.use(checkRoles(["shop", "admin"]));
 
 // Private route
 router.post("", asyncHandler(discountController.createDiscount));
@@ -20,11 +17,6 @@ router.post("", asyncHandler(discountController.createDiscount));
 router.patch(
     "/update/:discountId",
     asyncHandler(discountController.updateDiscount),
-);
-
-router.get(
-    "/get-all-products-by-discount/:discountCode",
-    asyncHandler(discountController.getAllProductsByDiscountCodeForShop),
 );
 
 router.get(

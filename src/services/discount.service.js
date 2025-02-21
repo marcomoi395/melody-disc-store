@@ -21,7 +21,7 @@ const {
 
 class DiscountService {
     static async getDiscountAmount(userId, body) {
-        const { code, products } = body;
+        const { code, totalPrice } = body;
         const foundDiscount = await getDiscount({
             discount_code: code,
             discount_is_active: true,
@@ -38,53 +38,21 @@ class DiscountService {
         )
             throw new BAD_REQUEST("Discount is expired");
 
-        let ids = products.map((product) => product._id);
-
-        if (foundDiscount.discount_apply_to === "specific_products") {
-            ids = ids.filter((item) =>
-                foundDiscount.discount_product_ids.includes(item),
-            );
-        }
-
-        if (ids.length === 0) {
-            throw new BAD_REQUEST("Invalid product id");
-        }
-
-        const foundProducts = await getProducts({
-            _id: { $in: ids },
-        });
-
-        let totalOrder = 0;
-        // get total order
-        totalOrder = foundProducts.reduce((acc, product) => {
-            const quantity = products.find(
-                (item) => item._id === product._id.toString(),
-            ).quantity;
-
-            return acc + product.product_price * quantity;
-        }, 0);
-
-        if (totalOrder < foundDiscount.discount_min_order_amount)
+        if (totalPrice < foundDiscount.discount_min_order_amount)
             throw new BAD_REQUEST("Discount requires a minimum order amount");
 
         const countUserUsage = foundDiscount.discount_user_used.filter(
             (item) => item === userId,
         ).length;
+
         if (countUserUsage > foundDiscount.discount_max_uses_per_user)
             throw new BAD_REQUEST(
                 "Account has exceeded the number of times allowed for use",
             );
 
-        const amount =
-            foundDiscount.discount_type === "fix_amount"
-                ? foundDiscount.discount_value
-                : (totalOrder * foundDiscount.discount_value) / 100;
-
-        return {
-            totalOrder,
-            discount: amount,
-            totalPrice: totalOrder - amount,
-        };
+        return foundDiscount.discount_type === "fix_amount"
+            ? foundDiscount.discount_value
+            : (totalPrice * foundDiscount.discount_value) / 100;
     }
 
     static async createDiscount(body) {
@@ -108,23 +76,6 @@ class DiscountService {
 
         if (foundDiscount) throw new FORBIDDEN("Discount already exists");
 
-        // Check list product
-        if (value.discount_apply_to === "specific_products") {
-            {
-                if (value.discount_product_ids.length === 0)
-                    throw new BAD_REQUEST("Invalid product id");
-
-                const newId = await getProducts({
-                    _id: { $in: value.discount_product_ids },
-                });
-
-                if (newId.length !== value.discount_product_ids.length)
-                    throw new BAD_REQUEST("Invalid product id");
-            }
-        } else {
-            delete value.discount_product_ids;
-        }
-
         // Create new discount
         return await createDiscount(value);
     }
@@ -142,22 +93,6 @@ class DiscountService {
             },
             { $set: updateNestedObjectParser(value) },
         );
-    }
-
-    static async getAllProductsByDiscountCodeForShop(code) {
-        const foundDiscount = await getDiscount({
-            discount_code: code,
-        });
-
-        if (!foundDiscount) throw new BAD_REQUEST("Discount not found");
-
-        if (foundDiscount.discount_apply_to === "all_products") {
-            return await getProducts({});
-        }
-
-        return await getProducts({
-            _id: { $in: foundDiscount.discount_product_ids },
-        });
     }
 
     static async getAllDiscountsForShop() {

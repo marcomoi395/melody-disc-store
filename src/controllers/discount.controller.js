@@ -4,7 +4,6 @@ const { SuccessResponse, Created } = require("../core/success.response");
 const {
     createDiscount,
     updateDiscount,
-    getAllProductsByDiscountCodeForShop,
     getAllDiscountsForShop,
     getDiscountAmount,
     deleteDiscountForShop,
@@ -26,26 +25,10 @@ class DiscountController {
         }).send(res);
     };
 
-    getAllProductsByDiscountCodeForShop = async (req, res) => {
-        new SuccessResponse({
-            message: "Get all products by discount code for shop",
-            metadata: await getAllProductsByDiscountCodeForShop(
-                req.params.discountCode,
-            ),
-        }).send(res);
-    };
-
     getAllDiscountForShop = async (req, res) => {
         new SuccessResponse({
             message: "Get all discount for shop",
             metadata: await getAllDiscountsForShop(),
-        }).send(res);
-    };
-
-    getDiscountAmount = async (req, res) => {
-        new SuccessResponse({
-            message: "Get discount amount",
-            metadata: await getDiscountAmount(req.user.userId, req.body),
         }).send(res);
     };
 

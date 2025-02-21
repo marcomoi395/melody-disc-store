@@ -20,10 +20,12 @@ const discountSchema = new Schema(
             type: String,
             required: true,
             default: "fixed_amount",
+            enum: ["fixed_amount", "percentage"],
         },
         discount_value: {
             type: Number,
             required: true,
+            default: 0,
         },
         discount_code: {
             type: String,
@@ -63,15 +65,6 @@ const discountSchema = new Schema(
         discount_is_active: {
             type: Boolean,
             default: true,
-        },
-        discount_apply_to: {
-            type: String,
-            required: true,
-            enum: ["all_products", "specific_products"],
-        },
-        discount_product_ids: {
-            type: Array,
-            default: [],
         },
     },
     {

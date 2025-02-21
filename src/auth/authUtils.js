@@ -68,7 +68,7 @@ const checkRoles = (roles) => (req, res, next) => {
         return next();
     }
 
-    next(new UNAUTHORIZED("Permission dined"));
+    next(new UNAUTHORIZED("Permission denied"));
 };
 
 module.exports = {
