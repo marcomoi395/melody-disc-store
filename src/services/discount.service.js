@@ -20,8 +20,7 @@ const {
 } = require("../validations/discount.validation.js");
 
 class DiscountService {
-    static async getDiscountAmount(userId, body) {
-        const { code, totalPrice } = body;
+    static async getDiscountAmount(userId, code, totalPrice) {
         const foundDiscount = await getDiscount({
             discount_code: code,
             discount_is_active: true,
